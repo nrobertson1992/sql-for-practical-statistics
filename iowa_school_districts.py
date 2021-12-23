@@ -13,8 +13,7 @@ iowa_district_graduations = pd.read_csv('iowa_district_graduations.csv')
 
 
 # Update columns.
-iowa_district_expenditures.columns = ['fiscal_year','actual_re_estimated_budget','aea','dist','de_dist','district_name','fund','source','expenditures_per_pupil','amount','enrollment_category','enrollment_category_number']
-
+iowa_district_expenditures.columns = ['fiscal_year','actual_re_estimated_budget','aea_dist','dist','de_dist','district_name','column_name', 'fund','source','expenditures_per_pupil','amount','enrollment_category','enrollment_category_number']
 iowa_district_graduations.columns = ['graduating_class','fall_freshman_year','district','district_name','graduates','total_cohorts','graduation_rate','graduation_rate_category']
 
 st.title('SQL for Practical Statistics: Iowa School Districts')
