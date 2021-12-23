@@ -76,4 +76,12 @@ q = st.text_area("Enter SQL Query here.", height = 300, placeholder='SELECT * \n
 if st.button('Execute SQL Query'):
 	st.write(f'Query executed: {q}')
 	st.write(f'Fetching results...')
-	st.write(sqldf(q, locals()))
+	df = sqldf(q, locals())
+	st.write(df)
+	st.download_buton(
+		"Download Results",
+		df.to_csv().encode('utf-8'),
+		"results.csv",
+   		"text/csv",
+   		key='download-csv'
+		)
