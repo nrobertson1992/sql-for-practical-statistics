@@ -72,13 +72,12 @@ with st.sidebar.expander('Table Reference: iowa_district_graduations', expanded=
 
 q = st.text_area("Enter SQL Query here.", height = 300, placeholder='SELECT * \nFROM iowa_district_expenditures\n LIMIT 10')
 
-df = None
+
 if st.button('Execute SQL Query'):
 	st.write(f'Query executed: {q}')
 	st.write(f'Fetching results...')
 	df = sqldf(q, locals())
 	st.write(df)
-if df != None:
 	st.download_button(
 		"Download Results",
 		df.to_csv().encode('utf-8'),
