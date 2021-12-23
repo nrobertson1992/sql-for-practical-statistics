@@ -78,7 +78,7 @@ if st.button('Execute SQL Query'):
 	st.write(f'Fetching results...')
 	df = sqldf(q, locals())
 	st.write(df)
-	st.download_buton(
+	st.download_button(
 		"Download Results",
 		df.to_csv().encode('utf-8'),
 		"results.csv",
