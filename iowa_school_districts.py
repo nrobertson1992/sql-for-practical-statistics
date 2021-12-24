@@ -2,6 +2,7 @@
 
 # Streamlit!
 import streamlit as st 
+from streamlit_ace import st_ace
 
 # Python packages for supporting the query engine.
 from pandasql import sqldf
@@ -16,6 +17,8 @@ iowa_district_graduations = pd.read_csv('iowa_district_graduations.csv')
 iowa_district_expenditures.columns = ['fiscal_year','actual_re_estimated_budget','aea','dist','de_dist','district_name','column_name', 'fund','source','expenditures_per_pupil','amount','enrollment_category','enrollment_category_number']
 iowa_district_graduations.columns = ['graduating_class','fall_freshman_year','district','district_name','graduates','total_cohort','graduation_rate','graduation_rate_category']
 
+
+st.set_page_config(layout="wide")
 st.title('SQL for Practical Statistics: Iowa School Districts')
 
 
@@ -70,18 +73,47 @@ with st.sidebar.expander('Table Reference: iowa_district_graduations', expanded=
 			""")
 
 
-q = st.text_area("Enter SQL Query here.", height = 300, placeholder='SELECT * \nFROM iowa_district_expenditures\n LIMIT 10')
+THEMES = [
+    "ambiance", "chaos", "chrome", "clouds", "clouds_midnight", "cobalt", "crimson_editor", "dawn",
+    "dracula", "dreamweaver", "eclipse", "github", "gob", "gruvbox", "idle_fingers", "iplastic",
+    "katzenmilch", "kr_theme", "kuroir", "merbivore", "merbivore_soft", "mono_industrial", "monokai",
+    "nord_dark", "pastel_on_dark", "solarized_dark", "solarized_light", "sqlserver", "terminal",
+    "textmate", "tomorrow", "tomorrow_night", "tomorrow_night_blue", "tomorrow_night_bright",
+    "tomorrow_night_eighties", "twilight", "vibrant_ink", "xcode"
+]
+
+KEYBINDINGS = ["emacs", "sublime", "vim", "vscode"]
 
 
-if st.button('Execute SQL Query'):
-	st.write(f'Query executed: {q}')
-	st.write(f'Fetching results...')
+
+st.write('### Code editor')
+st.write('*Remember to save your code separately!*')
+q = st_ace(
+			value='SELECT\n\t*\nFROM\n\tiowa_district_graduations\nLIMIT 10',
+			language="sql",
+	 		placeholder="st.header('Hello world!')",
+			theme=THEMES[8],
+			keybinding=KEYBINDINGS[3],
+			font_size=14,
+			tab_size=4,
+			wrap=False,
+			show_gutter=True,
+			show_print_margin=True,
+			auto_update=False,
+			readonly=False,
+			key="ace-editor",
+			min_lines=12,
+			max_lines=20)
+
+
+if q:
+	st.write(f'Results for {q}.')
 	df = sqldf(q, locals())
-	st.write(df)
+	st.dataframe(df,width=800)
 	st.download_button(
-		"Download Results",
-		df.to_csv().encode('utf-8'),
-		"results.csv",
-   		"text/csv",
-   		key='download-csv'
-		)
+			"Download Results",
+			df.to_csv().encode('utf-8'),
+			"results.csv",
+	   		"text/csv",
+	   		key='download-csv'
+			)
