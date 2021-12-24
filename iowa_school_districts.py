@@ -18,7 +18,7 @@ iowa_district_expenditures.columns = ['fiscal_year','actual_re_estimated_budget'
 iowa_district_graduations.columns = ['graduating_class','fall_freshman_year','district','district_name','graduates','total_cohort','graduation_rate','graduation_rate_category']
 
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide",initial_sidebar_state='collapsed')
 st.title('SQL for Practical Statistics: Iowa School Districts')
 
 
@@ -85,10 +85,12 @@ THEMES = [
 KEYBINDINGS = ["emacs", "sublime", "vim", "vscode"]
 
 
+col1, col2 = st.columns(2)
 
-st.write('### Code editor')
-st.write('*Remember to save your code separately!*')
-q = st_ace(
+with col1:
+	st.write('### Code editor')
+	st.write('*Remember to save your code separately!*')
+	q = st_ace(
 			value='SELECT\n\t*\nFROM\n\tiowa_district_graduations\nLIMIT 10',
 			language="sql",
 	 		placeholder="st.header('Hello world!')",
@@ -101,19 +103,23 @@ q = st_ace(
 			show_print_margin=True,
 			auto_update=False,
 			readonly=False,
-			key="ace-editor",
-			min_lines=12,
-			max_lines=20)
+			height=292,
+			key="ace-editor")
 
 
-if q:
-	st.write(f'Results for {q}.')
-	df = sqldf(q, locals())
-	st.dataframe(df,width=800)
-	st.download_button(
-			"Download Results",
-			df.to_csv().encode('utf-8'),
-			"results.csv",
-	   		"text/csv",
-	   		key='download-csv'
-			)
+
+with col2:
+	if q:
+		st.write('### Results')
+		st.write('*View results here, or download as a CSV.*')
+		df = sqldf(q, locals())
+		st.dataframe(df,width=800)
+
+
+		st.download_button(
+				"Download Results",
+				df.to_csv().encode('utf-8'),
+				"results.csv",
+		   		"text/csv",
+		   		key='download-csv'
+				)
