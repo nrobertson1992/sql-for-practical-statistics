@@ -10,6 +10,8 @@ import pandas as pd
 
 # Import data.
 iowa_district_expenditures = pd.read_csv('iowa_district_expenditures.csv')
+
+#@st.cache(suppress_st_warning=True)
 iowa_district_graduations = pd.read_csv('iowa_district_graduations.csv')
 
 
@@ -112,14 +114,21 @@ with col2:
 	if q:
 		st.write('### Results')
 		st.write('*View results here, or download as a CSV.*')
-		df = sqldf(q, locals())
-		st.dataframe(df,width=800)
+
+		try:
+			if 'join' in q.lower() and 'on' not in q.replace('graduation','').lower():
+				st.error('Does your JOIN clause have an ON statement?')
+			else:
+				df = sqldf(q, locals())
+				st.dataframe(df,width=800)
 
 
-		st.download_button(
+				st.download_button(
 				"Download Results",
 				df.to_csv().encode('utf-8'),
 				"results.csv",
 		   		"text/csv",
 		   		key='download-csv'
 				)
+		except Exception as e:
+			st.error(e)
